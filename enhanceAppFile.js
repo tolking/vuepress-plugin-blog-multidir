@@ -39,12 +39,7 @@ class Classifiable {
   }
 }
 
-export default ({
-  Vue,
-  options,
-  router,
-  siteData
-}) => {
+export default ({ Vue }) => {
   Vue.mixin({
     computed: {
       $pluginConfig() {
