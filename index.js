@@ -69,7 +69,7 @@ module.exports = (options, ctx) => {
             // all pagination link
             const pagination = Array.from(Array(page), (v, k) => {
               const link = scope
-                ? `/${scope}/${key}/`
+                ? `/${scope}/${key}`
                 : key.startsWith(aliasesRoot)
                 ? key.split(aliasesRoot)[1] || ''
                 : `/${key}`
