@@ -16,7 +16,7 @@ npm i vuepress-plugin-blog-multidir
 
 ## Usage
 
-``` json
+``` js
 module.exports = {
   plugins: [
     'blog-multidir'
@@ -38,28 +38,28 @@ module.exports = {
 For internal use only.
 
 ### categoryIndexPageUrl
-- Type: string
-- Default: /category/
+- Type: `string`
+- Default: `/category/`
 
 ### tagIndexPageUrl
-- Type: string
-- Default: /tag/
+- Type: `string`
+- Default: `/tag/`
 
 ### categoryLayout
-- Type: string
-- Default: Tag
+- Type: `string`
+- Default: `Tag`
 
 ### tagLayout
-- Type: string
-- Default: Tag
+- Type: `string`
+- Default: `Tag`
 
 ### postLayout
-- Type: string
-- Default: Page
+- Type: `string`
+- Default: `Page`
 
 ### postsDir
-- Type: string, array, Object
-- Default: posts
+- Type: `string`, `array`, `Object`
+- Default: `posts`
 
 Configures the permalink generated for you folder.
 
@@ -77,13 +77,13 @@ postsDir = {
 ```
 
 ### permalink
-- Type: string, boolean(false)
-- Default: false
+- Type: `string`, `boolean(false)`
+- Default: `false`
 
 See [Permalinks](https://v1.vuepress.vuejs.org/guide/permalinks.html#template-variables) for a list of valid variables.
 
 ### postsSorter
-- Type: function
+- Type: `function`
 - Default: 
 ``` js
 ((prev, next) => {
@@ -94,16 +94,16 @@ See [Permalinks](https://v1.vuepress.vuejs.org/guide/permalinks.html#template-va
 ```
 
 ### paginationDir
-- Type: boolean, string, array
-- Default: true
+- Type: `boolean`, `string`, `array`
+- Default: `true`
 
 ### paginationLimit
-- Type: number
-- Default: 12
+- Type: `number`
+- Default: `12`
 
 ### paginatioPath
-- Type: string
-- Default: /page/
+- Type: `string`
+- Default: `/page/`
 
 ## computed
 
