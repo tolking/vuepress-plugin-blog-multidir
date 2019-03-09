@@ -1,6 +1,6 @@
 {
   "name": "vuepress-plugin-blog-multidir",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "description": "Blog plugin for vuepress",
   "author": "tolking <qw13131wang@gmail.com>",
