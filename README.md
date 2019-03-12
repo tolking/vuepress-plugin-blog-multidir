@@ -103,7 +103,7 @@ See [Permalinks](https://v1.vuepress.vuejs.org/guide/permalinks.html#template-va
 
 ### paginatioPath
 - Type: `string`
-- Default: `/page/`
+- Default: `page/`
 
 ## computed
 

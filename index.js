@@ -29,7 +29,7 @@ module.exports = (options, ctx) => {
     }),
     paginationDir = true,
     paginationLimit = 12,
-    paginatioPath = '/page/'
+    paginatioPath = 'page/'
   } = options
 
   return {
@@ -42,60 +42,51 @@ module.exports = (options, ctx) => {
       const categoryMap = {}
       const listMap = {}
 
-      const curryHandler = (map, scope) => (key, pageKey, pagination) => {
+      const curryHandler = (map, scope) => (key, pageKey) => {
         if (key) {
           if (!map[key]) {
             map[key] = {
               path: scope
                 ? `/${scope}/${key}/`
                 : key.startsWith(aliasesRoot)
-                ? key.split(aliasesRoot)[1] + '/'
-                : `/${key}/`,
+                  ? key.split(aliasesRoot)[1] + '/'
+                  : `/${key}/`,
               pageKeys: []
             }
           }
           map[key].pageKeys.push(pageKey)
-          map[key].pagination = pagination
         }
       }
-      const setPagination = (map, scope) => {
-        const handlePage = curryHandler(map, scope)
-
+      const setPage = map => {
         for (const key in map) {
           if (checkFile(paginationDir, key) && map.hasOwnProperty(key)) {
-            const item = map[key]
-            const pageKeys = [...item.pageKeys]
-            const page = Math.ceil(pageKeys.length / paginationLimit)
-            // all pagination link
-            const pagination = Array.from(Array(page), (v, k) => {
-              const link = scope
-                ? `/${scope}/${key}`
-                : key.startsWith(aliasesRoot)
-                ? key.split(aliasesRoot)[1] || ''
-                : `/${key}`
-              if (k) {
-                return link + paginatioPath + (k + 1) + '/'
-              } else {
-                return link + '/'
-              }
-            })
-            if (page > 1) {
-              for (let i = 1; i <= page; i++) {
-                const _pageKeys = pageKeys.splice(0, paginationLimit)
-
-                if (i === 1) {
-                  item.pageKeys = _pageKeys
-                  item.pagination = pagination
-                } else {
-                  _pageKeys.forEach(item => {
-                    handlePage(key + paginatioPath + i, item, pagination)
-                  });
-                }
-              }
-            }
+            map[key].page = Math.ceil(map[key].pageKeys.length / paginationLimit)
           }
         }
         return map
+      }
+      const addPages = (map, name) => {
+        let pages = [];
+        Object.keys(map).map(key => {
+          if (map[key].page) {
+            for (let i = 1; i <= map[key].page; i++) {
+              pages.push({
+                permalink: i === 1
+                  ? map[key].path
+                  : map[key].path + paginatioPath + i + '/',
+                meta: { [name]: key, current: i },
+                frontmatter: { title: key.includes(aliasesRoot) ? '' : key }
+              })
+            }
+          } else {
+            pages.push({
+              permalink: map[key].path,
+              meta: { [name]: key },
+              frontmatter: { title: key.includes(aliasesRoot) ? '' : key }
+            })
+          }
+        })
+        return pages
       }
 
       const handleTag = curryHandler(tagMap, 'tag')
@@ -131,9 +122,9 @@ module.exports = (options, ctx) => {
           && handlelist(arrPath[0], key)
       })
 
-      ctx.tagMap = setPagination(tagMap, 'tag')
-      ctx.categoryMap = setPagination(categoryMap, 'category')
-      ctx.listMap = setPagination(listMap)
+      ctx.tagMap = setPage(tagMap)
+      ctx.categoryMap = setPage(categoryMap)
+      ctx.listMap = setPage(listMap)
 
       const extraPages = [
         {
@@ -144,22 +135,11 @@ module.exports = (options, ctx) => {
           permalink: categoryIndexPageUrl,
           frontmatter: { title: 'Categories', layout: categoryLayout }
         },
-        ...Object.keys(ctx.tagMap).map(tagName => ({
-          permalink: ctx.tagMap[tagName].path,
-          meta: { tagName },
-          frontmatter: { title: `${tagName} | Tag` }
-        })),
-        ...Object.keys(ctx.categoryMap).map(categoryName => ({
-          permalink: ctx.categoryMap[categoryName].path,
-          meta: { categoryName },
-          frontmatter: { title: `${categoryName} | Category` }
-        })),
-        ...Object.keys(ctx.listMap).map(listName => ({
-          permalink: ctx.listMap[listName].path,
-          meta: { listName },
-          frontmatter: { title: listName.includes(aliasesRoot) ? '' : listName }
-        }))
+        ...addPages(ctx.tagMap, 'tagName'),
+        ...addPages(ctx.categoryMap, 'categoryName'),
+        ...addPages(ctx.listMap, 'listName')
       ]
+
       await Promise.all(extraPages.map(page => ctx.addPage(page)))
     },
      /**
