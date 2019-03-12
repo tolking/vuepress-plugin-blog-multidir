@@ -34,8 +34,32 @@ class Classifiable {
     return tags
   }
 
-  getItemByName (name) {
-    return this._metaMap[name]
+  getItemByName (name, current) {
+    const item = this._metaMap[name]
+    const pagination = item.page > 1
+      ? Array.from(Array(item.page), (v, k) => {
+        return k
+          ? item.path + pluginConfig.paginatioPath + (k + 1) + '/'
+          : item.path
+      })
+      : []
+
+    return {
+      pagination,
+      path: item.path,
+      pageKeys: current
+        ? item.pageKeys.slice(
+          pluginConfig.paginationLimit * (current - 1),
+          pluginConfig.paginationLimit * current
+        )
+        : item.posts,
+      posts: current
+        ? item.posts.slice(
+          pluginConfig.paginationLimit * (current - 1),
+          pluginConfig.paginationLimit * current
+        )
+        : item.posts
+    }
   }
 }
 
@@ -64,13 +88,14 @@ export default ({ Vue }) => {
         const tagName = this.$route.meta.tagName
         const categoryName = this.$route.meta.categoryName
         const listName = this.$route.meta.listName
+        const current = this.$route.meta.current
 
         if (tagName) {
-          return this.$tags.getItemByName(tagName)
+          return this.$tags.getItemByName(tagName, current)
         } else if (categoryName) {
-          return this.$categories.getItemByName(categoryName)
+          return this.$categories.getItemByName(categoryName, current)
         } else {
-          return this.$lists.getItemByName(listName)
+          return this.$lists.getItemByName(listName, current)
         }
       }
     }
