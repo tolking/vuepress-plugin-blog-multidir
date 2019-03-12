@@ -2,8 +2,10 @@
 
 ## 1.0.3
 - change pagination
-Make the `$tags` and `$categories` and `$lists` clean
-Get the current page by `this.$route.meta.current`
+
+  Make the `$tags` and `$categories` and `$lists` clean
+
+  Get the current page by `this.$route.meta.current`
 
 - change paginatioPath default
 default: `page/`

@@ -59,9 +59,9 @@ module.exports = (options, ctx) => {
       }
       const setPage = map => {
         for (const key in map) {
-          if (checkFile(paginationDir, key) && map.hasOwnProperty(key)) {
-            map[key].page = Math.ceil(map[key].pageKeys.length / paginationLimit)
-          }
+          checkFile(paginationDir, key)
+            && map.hasOwnProperty(key)
+            && (map[key].page = Math.ceil(map[key].pageKeys.length / paginationLimit))
         }
         return map
       }
@@ -139,7 +139,6 @@ module.exports = (options, ctx) => {
         ...addPages(ctx.categoryMap, 'categoryName'),
         ...addPages(ctx.listMap, 'listName')
       ]
-
       await Promise.all(extraPages.map(page => ctx.addPage(page)))
     },
      /**
