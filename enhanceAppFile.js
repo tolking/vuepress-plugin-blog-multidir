@@ -68,7 +68,7 @@ class Classifiable {
       path,
       pageKeys: current
         ? this.sliceItem(pageKeys, str, end)
-        : posts,
+        : pageKeys,
       posts: current
         ? this.sliceItem(posts, str, end)
         : posts
