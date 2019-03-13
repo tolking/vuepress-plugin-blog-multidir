@@ -12,19 +12,15 @@ class Classifiable {
       this._metaMap[name].posts = pageKeys.map(key => findPageByKey(pages, key))
     })
   }
-
   get length () {
     return Object.keys(this._metaMap).length
   }
-
   get map () {
     return this._metaMap
   }
-
   get list () {
     return this.toArray()
   }
-
   toArray () {
     const tags = []
     Object.keys(this._metaMap).forEach(name => {
@@ -33,32 +29,49 @@ class Classifiable {
     })
     return tags
   }
-
+  sliceItem (item, str, end) {
+    return item.slice(str, end)
+  }
+  getItemByKeys (pageKey) {
+    for (const dir in this._metaMap) {
+      if (dir !== pluginConfig.aliasesRoot && this._metaMap.hasOwnProperty(dir)) {
+        const item = this._metaMap[dir]
+        const index = item.pageKeys.indexOf(pageKey)
+        if (index > -1) {
+          return {
+            dir,
+            index: index + 1,
+            total: item.pageKeys.length,
+            lastPost: item.posts[index - 1],
+            nextPost: item.posts[index + 1]
+          }
+        }
+      }
+    }
+    return {}
+  }
   getItemByName (name, current) {
-    const item = this._metaMap[name]
-    const pagination = item.page > 1
-      ? Array.from(Array(item.page), (v, k) => {
+    const { paginationLimit, paginatioPath } = pluginConfig
+    const { page, path, pageKeys, posts } = this._metaMap[name]
+    const str = paginationLimit * (current - 1)
+    const end = paginationLimit * current
+    const pagination = page > 1
+      ? Array.from(Array(page), (v, k) => {
         return k
-          ? item.path + pluginConfig.paginatioPath + (k + 1) + '/'
-          : item.path
+          ? path + paginatioPath + (k + 1) + '/'
+          : path
       })
       : []
 
     return {
       pagination,
-      path: item.path,
+      path,
       pageKeys: current
-        ? item.pageKeys.slice(
-          pluginConfig.paginationLimit * (current - 1),
-          pluginConfig.paginationLimit * current
-        )
-        : item.posts,
+        ? this.sliceItem(pageKeys, str, end)
+        : posts,
       posts: current
-        ? item.posts.slice(
-          pluginConfig.paginationLimit * (current - 1),
-          pluginConfig.paginationLimit * current
-        )
-        : item.posts
+        ? this.sliceItem(posts, str, end)
+        : posts
     }
   }
 }
@@ -94,8 +107,10 @@ export default ({ Vue }) => {
           return this.$tags.getItemByName(tagName, current)
         } else if (categoryName) {
           return this.$categories.getItemByName(categoryName, current)
-        } else {
+        } else if (listName) {
           return this.$lists.getItemByName(listName, current)
+        } else {
+          return this.$lists.getItemByKeys(this.$page.key)
         }
       }
     }
