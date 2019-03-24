@@ -58,11 +58,10 @@ module.exports = (options, ctx) => {
         }
       }
       const setPage = map => {
-        for (const key in map) {
+        Object.keys(map).forEach(key => {
           checkFile(paginationDir, key)
-            && map.hasOwnProperty(key)
             && (map[key].page = Math.ceil(map[key].pageKeys.length / paginationLimit))
-        }
+        })
         return map
       }
       const addPages = (map, name) => {
