@@ -2,6 +2,9 @@
 
 [README](README.md) | [CHANGELOG](CHANGELOG.md)
 
+## 1.0.5
+- up readme.md
+
 ## 1.0.4
 - add lastPost and nextPost information on the `$list`
 

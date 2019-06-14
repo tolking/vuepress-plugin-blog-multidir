@@ -4,7 +4,7 @@ const checkFile = (file, key) => {
   if (isString(file)) {
     return key === file
   } else if (Array.isArray(file)) {
-    return file.indexOf(key) > -1
+    return file.includes(key)
   } else if (file && typeof file === 'boolean') {
     return true
   } else {

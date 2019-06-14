@@ -1,18 +1,11 @@
 # vuepress-plugin-blog-multidir
 
-> Blog plugin for vuepress
+> A VuePress blog plugin which Support multiple folders
 
 [README](README.md) | [CHANGELOG](CHANGELOG.md)
 
-**This plugin is for Vuepress 1.x which is currently in alpha**
-
-The [@vuepress/plugin-blog](https://github.com/vuejs/vuepress/tree/master/packages/%40vuepress/plugin-blog) only supports one folder, but I want more.
-
+Build your blog through multiple folders
 ---
-
-## Features
-- Support multiple folders
-- 
 
 ## Installation
 
