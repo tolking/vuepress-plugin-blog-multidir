@@ -4,7 +4,7 @@ const checkFile = (file, key) => {
   if (isString(file)) {
     return key === file
   } else if (Array.isArray(file)) {
-    return file.indexOf(key) > -1
+    return file.includes(key)
   } else if (file && typeof file === 'boolean') {
     return true
   } else {
@@ -58,11 +58,10 @@ module.exports = (options, ctx) => {
         }
       }
       const setPage = map => {
-        for (const key in map) {
+        Object.keys(map).forEach(key => {
           checkFile(paginationDir, key)
-            && map.hasOwnProperty(key)
             && (map[key].page = Math.ceil(map[key].pageKeys.length / paginationLimit))
-        }
+        })
         return map
       }
       const addPages = (map, name) => {
